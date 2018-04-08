@@ -10,9 +10,14 @@ import 'moment/locale/zh-cn';
 import './rollbar';
 
 import './index.less';
+
+const onStateChange = (fn) => {
+  // console.log(fn);
+};
 // 1. Initialize
 const app = dva({
   history: createHistory(),
+  onStateChange,
 });
 
 // 2. Plugins
@@ -26,5 +31,5 @@ app.router(require('./router').default);
 
 // 5. Start
 app.start('#root');
-
 export default app._store; // eslint-disable-line
+export const getStore = () => app._store;  // eslint-disable-line

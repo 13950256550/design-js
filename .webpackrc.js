@@ -2,6 +2,15 @@ const path = require('path');
 
 export default {
   entry: 'src/index.js',
+
+  proxy: {
+    '/proxy': {
+      target: 'http://localhost:8080/',
+      changeOrigin: true,
+      pathRewrite: { '^/proxy': '' },
+    },
+  },
+
   extraBabelPlugins: [
     'transform-decorators-legacy',
     ['import', { libraryName: 'antd', libraryDirectory: 'es', style: true }],

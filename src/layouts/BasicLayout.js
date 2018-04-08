@@ -6,7 +6,6 @@ import { connect } from 'dva';
 import { Route, Redirect, Switch, routerRedux } from 'dva/router';
 import { ContainerQuery } from 'react-container-query';
 import classNames from 'classnames';
-import { enquireScreen } from 'enquire-js';
 import GlobalHeader from '../components/GlobalHeader';
 import GlobalFooter from '../components/GlobalFooter';
 import SiderMenu from '../components/SiderMenu';
@@ -14,7 +13,9 @@ import NotFound from '../routes/Exception/404';
 import { getRoutes } from '../utils/utils';
 import Authorized from '../utils/Authorized';
 import { getMenuData } from '../common/menu';
-import logo from '../assets/logo.svg';
+// import logo from '../assets/logo.svg';
+
+import { PRO_TITLE, COMPANY_NAME, logo } from '../common/const.js';
 
 const { Content, Header, Footer } = Layout;
 const { AuthorizedRoute, check } = Authorized;
@@ -78,18 +79,10 @@ const query = {
   },
 };
 
-let isMobile;
-enquireScreen(b => {
-  isMobile = b;
-});
-
 class BasicLayout extends React.PureComponent {
   static childContextTypes = {
     location: PropTypes.object,
     breadcrumbNameMap: PropTypes.object,
-  };
-  state = {
-    isMobile,
   };
   getChildContext() {
     const { location, routerData } = this.props;
@@ -98,17 +91,33 @@ class BasicLayout extends React.PureComponent {
       breadcrumbNameMap: getBreadcrumbNameMap(getMenuData(), routerData),
     };
   }
+  componentWillMount() {
+    const sessionid = localStorage.getItem('design.client.sessionid');
+    if(sessionid){
+      this.props.dispatch({
+        type: 'user/fetchCurrent',
+        payload: sessionid,
+      });
+      this.props.dispatch({
+        type: 'user/fetchMenus',
+        payload: sessionid,
+      });
+    }else{
+      this.props.dispatch({
+        type: 'login/logout',
+      });
+    }
+
+  }
   componentDidMount() {
-    this.props.dispatch({
-      type: 'user/fetchCurrent',
-    });
+
   }
   getPageTitle() {
     const { routerData, location } = this.props;
     const { pathname } = location;
-    let title = 'Ant Design Pro';
+    let title = PRO_TITLE;
     if (routerData[pathname] && routerData[pathname].name) {
-      title = `${routerData[pathname].name} - Ant Design Pro`;
+      title = `${routerData[pathname].name} - ${PRO_TITLE}`;
     }
     return title;
   }
@@ -167,13 +176,14 @@ class BasicLayout extends React.PureComponent {
     const {
       currentUser,
       collapsed,
-      fetchingNotices,
-      notices,
       routerData,
       match,
       location,
+      menus,
     } = this.props;
     const bashRedirect = this.getBashRedirect();
+    const mensData = getMenuData()
+
     const layout = (
       <Layout>
         <SiderMenu
@@ -182,10 +192,9 @@ class BasicLayout extends React.PureComponent {
           // If you do not have the Authorized parameter
           // you will be forced to jump to the 403 interface without permission
           Authorized={Authorized}
-          menuData={getMenuData()}
+          menuData={menus}
           collapsed={collapsed}
           location={location}
-          isMobile={this.state.isMobile}
           onCollapse={this.handleMenuCollapse}
         />
         <Layout>
@@ -193,14 +202,9 @@ class BasicLayout extends React.PureComponent {
             <GlobalHeader
               logo={logo}
               currentUser={currentUser}
-              fetchingNotices={fetchingNotices}
-              notices={notices}
               collapsed={collapsed}
-              isMobile={this.state.isMobile}
-              onNoticeClear={this.handleNoticeClear}
               onCollapse={this.handleMenuCollapse}
               onMenuClick={this.handleMenuClick}
-              onNoticeVisibleChange={this.handleNoticeVisibleChange}
             />
           </Header>
           <Content style={{ margin: '24px 24px 0', height: '100%' }}>
@@ -226,7 +230,7 @@ class BasicLayout extends React.PureComponent {
             <GlobalFooter
               copyright={
                 <Fragment>
-                  Copyright <Icon type="copyright" /> 2018 蚂蚁金服体验技术部出品
+                  Copyright <Icon type="copyright" /> {COMPANY_NAME}
                 </Fragment>
               }
             />
@@ -245,9 +249,8 @@ class BasicLayout extends React.PureComponent {
   }
 }
 
-export default connect(({ user, global, loading }) => ({
+export default connect(({ user, global }) => ({
   currentUser: user.currentUser,
+  menus: user.menus,
   collapsed: global.collapsed,
-  fetchingNotices: loading.effects['global/fetchNotices'],
-  notices: global.notices,
 }))(BasicLayout);
