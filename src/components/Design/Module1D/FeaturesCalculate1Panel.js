@@ -6,8 +6,33 @@ import CustomInput from '../../../common/core/components/CustomInput';
 import CustomTable from '../../../common/core/components/table/CustomTable';
 import { getCodeList } from '../../../common/core/CodeList';
 
+const columns1 = [
+  { key: 1, title: 'A', dataIndex: 'A', width: '10%' },
+  { key: 2, title: 'B', dataIndex: 'B', width: '10%' },
+  { key: 3, title: 'C', dataIndex: 'C', width: '10%' },
+  { key: 4, title: 'D', dataIndex: 'D', width: '10%' },
+  { key: 5, title: 'E', dataIndex: 'E', width: '10%' },
+  { key: 6, title: 'F', dataIndex: 'F', width: '10%' },
+  { key: 7, title: 'G', dataIndex: 'G', width: '10%' },
+  { key: 8, title: 'H', dataIndex: 'H', width: '10%' },
+  { key: 7, title: 'I', dataIndex: 'I', width: '10%' },
+  { key: 8, title: 'J', dataIndex: 'J', width: '10%' },
+];
+
+const columns2 = [
+  { key: 1, title: 'A', dataIndex: 'A', width: '10%' },
+  { key: 2, title: 'B', dataIndex: 'B', width: '10%' },
+  { key: 3, title: 'C', dataIndex: 'C', width: '10%' },
+  { key: 4, title: 'D', dataIndex: 'D', width: '10%' },
+  { key: 5, title: 'E', dataIndex: 'E', width: '10%' },
+  { key: 6, title: 'F', dataIndex: 'F', width: '10%' },
+  { key: 7, title: 'G', dataIndex: 'G', width: '10%' },
+];
+
+const rowHeader = ['NR','QL']
+
 class FeaturesCalculate1Panel extends React.PureComponent {
-  getComponent = (params) => {
+  getComponent = (params,i) => {
     const { key, callback, span, type } = { ...params };
     let data = this.props.module1D[key];
     if (!data) {
@@ -16,7 +41,7 @@ class FeaturesCalculate1Panel extends React.PureComponent {
     const codelist = getCodeList(this.props.codelists, key);
     const width = 6;
     return (
-      <Col span={width * (span || 1)}>
+      <Col span={width * (span || 1)} key={i}>
         <CustomInput
           data={data}
           codelist={codelist}
@@ -28,17 +53,17 @@ class FeaturesCalculate1Panel extends React.PureComponent {
     );
   }
 
-  getRow = (list) => {
-    const cols = list.map((data => this.getComponent(data)));
+  getRow = (list,i) => {
+    const cols = list.map(((data,id) => this.getComponent(data,id)));
     return (
-      <Row>
+      <Row key={i}>
         {cols}
       </Row>
     );
   }
 
   getRows = (list) => {
-    return list.map((data => this.getRow(data)));
+    return list.map(((data,i) => this.getRow(data,i)));
   }
 
   render() {
@@ -63,10 +88,23 @@ class FeaturesCalculate1Panel extends React.PureComponent {
 
     return (
       <div>
-        {this.getRows(rows.slice(0, 4))}
+        {this.getRows(rows.slice(0, 3))}
         <Divider orientation="left">NR QL</Divider>
-        {this.getRows(rows.slice(4, 11))}
+        <CustomTable
+          columns={columns1}
+          dataSource={this.props.module1D['FeaturesCalculate1Panel.grid1']}
+          onTableChange={this.handleTableChange}
+          rowHeader={rowHeader}
+        />
+        <Divider />
+        {this.getRows(rows.slice(3, 10))}
         <Divider orientation="left">共同工作线(LSR ≠ 0 输) 由低向高顺序 2≤L≤10 点)</Divider>
+        <CustomTable
+          columns={columns2}
+          dataSource={this.props.module1D['FeaturesCalculate1Panel.grid2']}
+          onTableChange={this.handleTableChange}
+        />
+        <Divider />
       </div>
     );
   }

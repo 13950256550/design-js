@@ -1,4 +1,4 @@
-import { fetchData, fetchCodeList, updateData, getFile, updateFile, get1dOutput } from '../services/design';
+import { fetchData, fetchCodeList, updateData, getFile, updateFile, get1dOutput, calculate } from '../services/design';
 
 export default {
   namespace: 'design',
@@ -8,6 +8,7 @@ export default {
     codelists: {},
     file: '',
     d1_output: [],
+    calculate:{},
   },
 
   effects: {
@@ -61,16 +62,24 @@ export default {
         payload: response,
       });
     },
+
+    *calculate(payload, { call, put }) {
+      const response = yield call(calculate,payload);
+      yield put({
+        type: 'saveCalculate',
+        payload: response,
+      });
+    },
   },
 
   reducers: {
     save1d(state, action) {
-      //console.log('save1d', state, action.payload);
+      // console.log('save1d', state, action.payload);
       const result = {
         ...state,
         module1D: { ...state.module1D, ...action.payload },
       };
-      //console.log('save1d', result);
+      // console.log('save1d', result);
       return result;
     },
 
@@ -92,6 +101,13 @@ export default {
       return {
         ...state,
         d1_output: action.payload,
+      };
+    },
+
+    saveCalculate(state, action) {
+      return {
+        ...state,
+        calculate: { ...action.payload },
       };
     },
   },

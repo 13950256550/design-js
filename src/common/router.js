@@ -92,8 +92,17 @@ export const getRouterData = app => {
     '/user/login': {
       component: dynamicWrapper(app, ['login'], () => import('../routes/User/Login')),
     },
-    '/1d_design/input': {
-      component: dynamicWrapper(app, ['design'], () => import('../routes/Design/Input')),
+    '/home': {
+      component: dynamicWrapper(app, ['user', 'design'], () => import('../routes/Design/Home')),
+    },
+    '/1d_design/input1': {
+      component: dynamicWrapper(app, ['design'], () => import('../routes/Design/Input1')),
+    },
+    '/1d_design/input2': {
+      component: dynamicWrapper(app, ['design'], () => import('../routes/Design/Input2')),
+    },
+    '/1d_design/calculate': {
+      component: dynamicWrapper(app, ['design'], () => import('../routes/Design/Calculate')),
     },
     '/1d_design/output': {
       component: dynamicWrapper(app, ['design'], () => import('../routes/Design/Output')),

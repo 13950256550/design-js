@@ -33,3 +33,9 @@ export async function get1dOutput() {
     method: 'GET',
   });
 }
+
+export async function calculate(params){
+  return request(`/proxy/admin/calculate/${params}`, {
+    method: 'GET',
+  });
+}

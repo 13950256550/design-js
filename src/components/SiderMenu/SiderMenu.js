@@ -45,13 +45,11 @@ export default class SiderMenu extends PureComponent {
       });
     }
 
-    if(!this.menus || this.menus.length===0){
-      this.menus = nextProps.menuData;
-      this.flatMenuKeys = this.getFlatMenuKeys(nextProps.menuData);
-      this.state = {
-        openKeys: this.getDefaultCollapsedSubMenus(nextProps),
-      };
-    }
+    this.menus = nextProps.menuData;
+    this.flatMenuKeys = this.getFlatMenuKeys(nextProps.menuData);
+    this.state = {
+      openKeys: this.getDefaultCollapsedSubMenus(nextProps),
+    };
   }
   /**
    * Convert pathname to openKeys

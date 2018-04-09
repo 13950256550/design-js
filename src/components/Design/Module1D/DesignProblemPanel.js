@@ -48,7 +48,7 @@ class DesignProblemPanel extends React.PureComponent {
     }
   }
 
-  getComponent = (params) => {
+  getComponent = (params,i) => {
     const { key, callback, span, type } = { ...params };
     let data = this.props.module1D[key];
     if (!data) {
@@ -57,7 +57,7 @@ class DesignProblemPanel extends React.PureComponent {
     const codelist = getCodeList(this.props.codelists, key);
     const width = 6;
     return (
-      <Col span={width * (span || 1)}>
+      <Col span={width * (span || 1)} key={i}>
         <CustomInput
           data={data}
           codelist={codelist}
@@ -69,17 +69,17 @@ class DesignProblemPanel extends React.PureComponent {
     );
   }
 
-  getRow = (list) => {
-    const cols = list.map((data => this.getComponent(data)));
+  getRow = (list,i) => {
+    const cols = list.map(((data,id) => this.getComponent(data,id)));
     return (
-      <Row>
+      <Row key={i}>
         {cols}
       </Row>
     );
   }
 
   getRows = (list) => {
-    return list.map((data => this.getRow(data)));
+    return list.map(((data,i) => this.getRow(data,i)));
   }
 
   handleChange = (key, value) => {

@@ -4,28 +4,32 @@ import { Input } from 'antd';
 import styles from './table.less';
 
 
-class CustomTable extends React.PureComponent {
-  getTableHeader = (columns) => {
-    const trs = columns.map((data,i) => <th key={i} width={data.width}>{data.title}</th>);
+class DoubleHeaderTable extends React.PureComponent {
+  getTableHeader = (columns,i) => {
+    const trs = columns.map((data,id) => <th key={id} width={data.width}>{data.title}</th>);
     let rowh;
     if (this.props.rowHeader) {
       rowh = (<th />);
     }
     return (
-      <tr>
+      <tr key={i}>
         {rowh}{trs}
       </tr>
     );
   }
 
+  getTableHeaders = (columns) => {
+    return columns.map(this.getTableHeader)
+  }
+
   getTableRow = (data, columns) => {
     return (
-      <tr key={columns}>
+      <tr>
         {
-          columns.map((column,index) => {
+          columns.map((column) => {
             const value = data[column.dataIndex];
             return (
-              <td key={index}>
+              <td>
                 <Input
                   className={styles.input}
                   defaultValue={value}
@@ -88,7 +92,7 @@ class CustomTable extends React.PureComponent {
     return (
       <table className={styles.gridtable}>
         <thead>
-          {this.getTableHeader(this.props.columns)}
+          {this.getTableHeaders(this.props.columns)}
         </thead>
         <tbody>
           {data}
@@ -98,4 +102,4 @@ class CustomTable extends React.PureComponent {
   }
 }
 
-export default CustomTable;
+export default DoubleHeaderTable;

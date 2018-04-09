@@ -2,17 +2,12 @@ import React from 'react';
 import { connect } from 'dva';
 import { Tabs, Input } from 'antd';
 
-import ControlVariablePanel from '../../components/Design/Module1D/ControlVariablePanel';
-import DesignProblemPanel from '../../components/Design/Module1D/DesignProblemPanel';
-import CheckQuestion1Panel from '../../components/Design/Module1D/CheckQuestion1Panel';
-import CheckQuestion2Panel from '../../components/Design/Module1D/CheckQuestion2Panel';
-import CheckQuestion3Panel from '../../components/Design/Module1D/CheckQuestion3Panel';
-import FeaturesCalculate1Panel from '../../components/Design/Module1D/FeaturesCalculate1Panel';
+import OneDimensionalDgazdInputPanel from '../../components/Design/Module1D/OneDimensionalDgazdInputPanel';
 
 const { TextArea } = Input;
 const { TabPane } = { ...Tabs };
 
-class Design extends React.PureComponent {
+class DesignInput2 extends React.PureComponent {
   currentSelectedTabIndex = '0'
   componentWillMount() {
     this.props.dispatch({
@@ -78,32 +73,8 @@ class Design extends React.PureComponent {
               onChange={this.handleTextareaChange}
             />
           </TabPane>
-          <TabPane tab="控制变量" key="1">
-            <ControlVariablePanel />
-          </TabPane>
-          <TabPane tab="设计问题" key="2" >
-            <DesignProblemPanel />
-          </TabPane>
-          <TabPane tab="检查问题(1)" key="3" >
-            <CheckQuestion1Panel />
-          </TabPane>
-          <TabPane tab="检查问题(2)" key="4" >
-            <CheckQuestion2Panel />
-          </TabPane>
-          <TabPane tab="检查问题(3)" key="5" >
-            <CheckQuestion3Panel />
-          </TabPane>
-          <TabPane tab="特性计算(1)" key="6" >
-            <FeaturesCalculate1Panel />
-          </TabPane>
-          <TabPane tab="特性计算(2)" key="7" >
-            <div />
-          </TabPane>
-          <TabPane tab="特性计算(3)" key="8" >
-            <div />
-          </TabPane>
-          <TabPane tab="展弦比计算)" key="9" >
-            <div />
+          <TabPane tab="一维计算DGAZD.D输入界面" key="1">
+            <OneDimensionalDgazdInputPanel />
           </TabPane>
         </Tabs>
       </div>
@@ -117,4 +88,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps)(Design);
+export default connect(mapStateToProps)(DesignInput2);
