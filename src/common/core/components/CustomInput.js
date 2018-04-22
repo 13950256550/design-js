@@ -24,23 +24,25 @@ const sylesNames = {
 };
 
 class CustomInput extends React.PureComponent {
-  getInputComponent = (value, span) => {
+  getInputComponent = (value, span, disabled=false) => {
     return (
       <Input
         value={value}
         className={sylesNames[span].input}
         onChange={this.handleInputChange}
+        disabled={disabled}
       />
     );
   }
 
-  getSelectComponent = (codelist, value, span) => {
+  getSelectComponent = (codelist, value, span, disabled=false) => {
     return (
       <Select
         className={sylesNames[span].input}
         value={value}
         onChange={this.handleSelectChange}
         size="small"
+        disabled={disabled}
       >
         {getSelectOptions(codelist)}
       </Select>
@@ -69,11 +71,24 @@ class CustomInput extends React.PureComponent {
             </div>
           );
           break;
+        case 'short':
+          Component = (
+            <div className={styles.customdiv_short}>
+              <span className={styles.customspan_short}>{data.label}</span>
+              <Input
+                value={data.value}
+                className={styles.custominput_short}
+                onChange={this.handleInputChange}
+                disabled={data.disabled}
+              />
+            </div>
+          );
+          break;
         case 'longLabel':
           if (codelist && codelist.length > 0) {
-            input = this.getSelectComponent(codelist, data.value, 1);
+            input = this.getSelectComponent(codelist, data.value, 1, data.disabled);
           } else {
-            input = this.getInputComponent(data.value, 1);
+            input = this.getInputComponent(data.value, 1, data.disabled);
           }
           Component = (
             <div className={sylesNames[span].div}>
@@ -86,9 +101,9 @@ class CustomInput extends React.PureComponent {
       }
     } else if (data) {
       if (codelist && codelist.length > 0) {
-        input = this.getSelectComponent(codelist, data.value, span);
+        input = this.getSelectComponent(codelist, data.value, span, data.disabled);
       } else {
-        input = this.getInputComponent(data.value, span);
+        input = this.getInputComponent(data.value, span, data.disabled);
       }
 
       Component = (

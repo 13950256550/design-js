@@ -7,12 +7,10 @@ import { getCodeList } from '../../../common/core/CodeList';
 import CustomTable from '../../../common/core/components/table/CustomTable';
 
 const columns = [
-  { key: 1, title: 'A',width:'100' },
-  { key: 2, title: 'B',width:'100' },
-  { key: 3, title: 'C',width:'100' },
-  { key: 4, title: 'D',width:'100' },
-  { key: 5, title: 'E',width:'100' },
-  { key: 6, title: 'F',width:'100' },
+  { key: 1, title: '1',width:'100' },
+  { key: 2, title: '2',width:'100' },
+  { key: 3, title: '3',width:'100' },
+  { key: 4, title: '4',width:'100' },
 ];
 
 class AspectRatioCalculatePanel extends React.PureComponent {

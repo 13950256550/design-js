@@ -6,9 +6,35 @@ import CustomInput from '../../../common/core/components/CustomInput';
 import { getCodeList } from '../../../common/core/CodeList';
 
 class ControlVariablePanel extends React.PureComponent {
-  handleChange = (key, value) => {
+  setDisabled = (keys,disabled,module1D) => {
+    keys.forEach(key=>{
+      const data = {...this.props.module1D[key]};
+      data.disabled = disabled
+      module1D[key] = {...data}
+    })
+  }
+
+  handleChange = (key, data) => {
     const obj = {};
-    obj[key] = value;
+    obj[key] = data;
+
+    if(key==='损失修正符_IZI'){
+      const keys = ['损失校正系数ALN','ALW','PKN','PKW'];
+      if(data.value==='1'){
+        this.setDisabled(keys,false,obj);
+      }else{
+        this.setDisabled(keys,true,obj);
+      }
+    }
+
+    if(key==='解题类型_K'){
+      const keys = ['静叶可调_IREG','两特性同图IHAR'];
+      if(data.value==='1'){
+        this.setDisabled(keys,true,obj);
+      }else{
+        this.setDisabled(keys,false,obj);
+      }
+    }
 
     this.props.dispatch({
       type: 'design/save1d',
@@ -56,7 +82,7 @@ class ControlVariablePanel extends React.PureComponent {
       [{ key: '气压机个数_IRE', span: 2 }, { key: '机组个数_NV' }, { key: '解题类型_K' }],
       [{ key: '检查或设计_K12' }, { key: '损失修正符_IZI' }, { key: '不输K12_IZI', type: 'typeLabel' }],
       [{ key: '损失校正系数ALN' }, { key: 'ALW' }, { key: 'PKN' }, { key: 'PKW' }],
-      [{ key: '静叶可调_IREG' }, { key: '两特性同图IHAR' }, { key: '不输IREG_IHAR' }],
+      [{ key: '静叶可调_IREG' }, { key: '两特性同图IHAR' }, { key: '(K=1 不输不输IREG,IHAR)', type: 'typeLabel' }],
       [{ key: '流路转换_IZX' }, { key: '叶排轴向长度缩放_IDX' }, { key: '性能参数分布_IPE' }],
       [{ key: '叶型参数分布_IFH' }, { key: '叶排内设站_INZ' }],
     ];

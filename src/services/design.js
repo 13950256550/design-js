@@ -8,10 +8,10 @@ export async function fetchCodeList(param) {
   return request(`/proxy/api/codelist/${param}`, { method: 'GET' });
 }
 
-export async function updateData(params) {
-  return request('/proxy/api/updateData/1D/1d_in1', {
+export async function updateData(fileid,data) {
+  return request(`/proxy/api/updateData/${fileid}`, {
     method: 'POST',
-    body: params,
+    body: data,
   });
 }
 
@@ -21,15 +21,33 @@ export async function getFile(params) {
   });
 }
 
-export async function updateFile(params) {
-  return request('/proxy/api/updateFile/1D/1d_in1', {
+export async function updateFile(fileid,data) {
+  return request(`/proxy/api/updateFile/${fileid}`, {
     method: 'POST',
-    body: params,
+    body: data,
   });
 }
 
-export async function get1dOutput() {
-  return request('/proxy/api/getAeroData', {
+export async function getAeroData(sessionid) {
+  return request(`/proxy/api/getAeroData/${sessionid}`, {
+    method: 'GET',
+  });
+}
+
+export async function getFoilData(sessionid) {
+  return request(`/proxy/api/getFoilData/${sessionid}`, {
+    method: 'GET',
+  });
+}
+
+export async function getPathData(sessionid) {
+  return request(`/proxy/api/getPathData/${sessionid}`, {
+    method: 'GET',
+  });
+}
+
+export async function getPrefData(sessionid) {
+  return request(`/proxy/api/getPrefData/${sessionid}`, {
     method: 'GET',
   });
 }

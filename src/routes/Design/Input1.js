@@ -15,12 +15,14 @@ import AspectRatioCalculatePanel from '../../components/Design/Module1D/AspectRa
 const { TextArea } = Input;
 const { TabPane } = { ...Tabs };
 
+const sessionid = localStorage.getItem('design.client.sessionid');
+
 class Design extends React.PureComponent {
   currentSelectedTabIndex = '0'
   componentWillMount() {
     this.props.dispatch({
       type: 'design/fetchData',
-      payload: '1D_IN1',
+      payload: `input_1d_1/${sessionid}`,
     });
 
     this.props.dispatch({
@@ -30,26 +32,21 @@ class Design extends React.PureComponent {
 
     this.props.dispatch({
       type: 'design/getFile',
-      payload: '1D/1d_in1',
+      payload: `input_1d_1/${sessionid}`,
     });
   }
 
   callback = (key) => {
     if (key === '0') {
-      /*
       this.props.dispatch({
         type: 'design/updateData',
+        payload: `input_1d_1/${sessionid}`,
       });
-      */
-      /*
+    } else if (this.currentSelectedTabIndex === '0') {
       this.props.dispatch({
         type: 'design/updateFile',
-        payload: this.state.file,
+        payload: `input_1d_1/${sessionid}`,
       });
-      */
-      console.log('update data');
-    } else if (this.currentSelectedTabIndex === '0') {
-      console.log('update file');
     }
     this.currentSelectedTabIndex = key;
   }
@@ -63,12 +60,16 @@ class Design extends React.PureComponent {
     */
     this.props.dispatch({
       type: 'design/saveFile',
-      payload: { data: e.target.value },
+      payload: {input_1d_1:{ data: e.target.value }},
     });
   }
 
   render() {
-    const { data } = { ...this.props.file };
+    let { data } = { ...this.props.file.input_1d_1 };
+    if(!data){
+      data = {}
+    }
+
     return (
       <div>
         <Tabs onChange={this.callback} type="card" size="small">

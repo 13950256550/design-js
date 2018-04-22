@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'dva';
-import { Row, Col, Divider } from 'antd';
+import { Row, Col, Divider, Carousel } from 'antd';
 
 import CustomInput from '../../../common/core/components/CustomInput';
 import CustomTable from '../../../common/core/components/table/CustomTable';
@@ -19,33 +19,52 @@ const columns = [
     { key: 9, title: 'DHK', dataIndex: 'DHK', width: '10%' },
   ],
   [
-    { key: 1, title: '', dataIndex: '0', width: '10%' },
-    { key: 2, title: '1', dataIndex: '1', width: '10%' },
-    { key: 3, title: '2', dataIndex: '2', width: '10%' },
-    { key: 4, title: '3', dataIndex: '3', width: '10%' },
-    { key: 5, title: '4', dataIndex: '4', width: '10%' },
-    { key: 6, title: '5', dataIndex: '5', width: '10%' },
-    { key: 7, title: '6', dataIndex: '6', width: '10%' },
-    { key: 8, title: '7', dataIndex: '7', width: '10%' },
+    { key: 1, title: '1', dataIndex: '1', width: '12%' },
+    { key: 2, title: '2', dataIndex: '2', width: '12%' },
+    { key: 3, title: '3', dataIndex: '3', width: '12%' },
+    { key: 4, title: '4', dataIndex: '4', width: '12%' },
+    { key: 5, title: '5', dataIndex: '5', width: '12%' },
+    { key: 6, title: '6', dataIndex: '6', width: '12%' },
+    { key: 7, title: '7', dataIndex: '7', width: '12%' },
   ],
 ];
 
-const dataSource = [
-  ['', '', '', '', '', '', '', '', ''],
+const dataSource1 = [
+  ['0.0', '0.0', '0.0', '0.0', '0.0', '0.0', '0.0', '0.0', '0.0'],
 ];
 
 class DesignProblemPanel extends React.PureComponent {
   state = {
-    columnsIndex: 0,
+    dataSource:[],
+  }
+  componentWillMount() {
+    /*
+    const ISTAGE = Number(this.props.module1D['ISTAGE级数'])||0
+    const dataSource = [new Array(ISTAGE).fill('0')]
+    const module1D = {}
+    module1D.DesignProblemGrid1 = this.props.module1D.DesignProblemGrid1||dataSource1;
+    module1D.DesignProblemDRT1Grid = this.props.module1D.DesignProblemDRT1Grid||dataSource;
+    module1D.DesignProblemDRM1Grid = this.props.module1D.DesignProblemDRM1Grid||dataSource;
+    module1D.DesignProblemDRH1Grid = this.props.module1D.DesignProblemDRH1Grid||dataSource;
+
+    this.props.dispatch({
+      type: 'design/save1d',
+      payload: module1D,
+    });
+    */
   }
 
-  componentWillMount() {
-    if (this.props.module1D && !this.props.module1D.DesignProblemGrid1) {
-      this.props.dispatch({
-        type: 'design/save1d',
-        payload: { DesignProblemGrid1: dataSource },
+  componentWillReceiveProps(nextProps) {
+    /*
+    const isageNew = Number(nextProps.module1D['ISTAGE级数'])||0
+    const isageOld = Number(this.props.module1D['ISTAGE级数'])
+    if(isageNew!==isageOld){
+      const dataSource = [new Array(isageNew).fill('0')]
+      this.setState({
+        dataSource,
       });
     }
+    */
   }
 
   getComponent = (params,i) => {
@@ -82,27 +101,32 @@ class DesignProblemPanel extends React.PureComponent {
     return list.map(((data,i) => this.getRow(data,i)));
   }
 
-  handleChange = (key, value) => {
-    const obj = {};
-    obj[key] = value;
+  handleChange = (key, data) => {
+    const module1D = {};
+    module1D[key] = data;
 
+    if(key==='KPATH流路输入标识'){
+      this.slider.goTo(data.value)
+    }
+
+    if(key==='ISTAGE级数'){
+    }
+    console.log('000000000000000',this.props.module1D)
     this.props.dispatch({
       type: 'design/save1d',
-      payload: obj,
+      payload: module1D,
     });
-
-    if (key === 'KPATH流路输入标识') {
-
-    }
   }
 
-  handleTableChange = (value, row, col) => {
-    const grid = this.props.module1D.DesignProblemGrid1;
+  handleTableChange = (value, row, col, id) => {
+    const grid = this.props.module1D[id];
     grid[row][col] = value;
-
+    const module1D = {}
+    module1D[id] = grid;
+    // console.log(module1D)
     this.props.dispatch({
       type: 'design/save1d',
-      payload: { DesignProblemGrid1: grid },
+      payload: module1D,
     });
   };
 
@@ -132,11 +156,46 @@ class DesignProblemPanel extends React.PureComponent {
         <Divider orientation="left">KPATH关联变量</Divider>
         {this.getRows(rows.slice(4, 5))}
         <Divider orientation="left">请选择流路的11种形式,在表中**处写具体数值</Divider>
-        <CustomTable
-          columns={columns[this.state.columnsIndex]}
-          dataSource={this.props.module1D.DesignProblemGrid1}
-          onTableChange={this.handleTableChange}
-        />
+        <Carousel ref={(c) => { this.slider = c; }}>
+          <div>
+            <CustomTable
+              id='DesignProblemGrid1'
+              columns={columns[0]}
+              dataSource={this.props.module1D.DesignProblemGrid1}
+              onTableChange={this.handleTableChange}
+            />
+          </div>
+          <div>
+            {this.getComponent({ key: 'DCTK压气机出口外径',type:'short' },0)}
+            <CustomTable
+              id='DesignProblemDRT1Grid'
+              columns={columns[1]}
+              dataSource={this.props.module1D.DesignProblemDRT1Grid}
+              onTableChange={this.handleTableChange}
+              rowHeader={['DRT1']}
+            />
+          </div>
+          <div>
+            {this.getComponent({ key: 'DCMK压气机出口平均直径',type:'short' },0)}
+            <CustomTable
+              id='DesignProblemDRM1Grid'
+              columns={columns[1]}
+              dataSource={this.props.module1D.DesignProblemDRM1Grid}
+              onTableChange={this.handleTableChange}
+              rowHeader={['DRM1']}
+            />
+          </div>
+          <div>
+            {this.getComponent({ key: 'DCHK压气机出口内径',type:'short' },0)}
+            <CustomTable
+              id='DesignProblemDRH1Grid'
+              columns={columns[1]}
+              dataSource={this.props.module1D.DesignProblemDRH1Grid}
+              onTableChange={this.handleTableChange}
+              rowHeader={['DRH1']}
+            />
+          </div>
+        </Carousel>
         <Divider />
         {this.getRows(rows.slice(5, 14))}
         <Divider orientation="left">材料密度</Divider>

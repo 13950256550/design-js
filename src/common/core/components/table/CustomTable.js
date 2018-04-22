@@ -3,8 +3,8 @@ import { Input } from 'antd';
 
 import styles from './table.less';
 
-
 class CustomTable extends React.PureComponent {
+
   getTableHeader = (columns) => {
     const trs = columns.map((data,i) => <th key={i} width={data.width}>{data.title}</th>);
     let rowh;
@@ -39,14 +39,14 @@ class CustomTable extends React.PureComponent {
     );
   }
 
-  getTableRowWithoutcolumns = (data, rowIndex) => {
+  getTableRowWithoutColumns = (data, rowIndex) => {
     const rows = data.map((value, colIndex) => {
       return (
         <td key={colIndex}>
           <Input
             className={styles.input}
             defaultValue={value}
-            onPressEnter={e => this.handleTableChange(e, rowIndex, colIndex)}
+            onChange={e => this.handleTableChange(e, rowIndex, colIndex)}
             row={rowIndex}
             col={colIndex}
           />
@@ -68,7 +68,7 @@ class CustomTable extends React.PureComponent {
   getTableData = (list, columns) => {
     return (
       list.map((data, index) => {
-        const rows = this.getTableRowWithoutcolumns(data, index);
+        const rows = this.getTableRowWithoutColumns(data, index);
         return rows;
       })
     );
@@ -77,7 +77,7 @@ class CustomTable extends React.PureComponent {
   handleTableChange = (e, row, col) => {
     e.preventDefault();
     if (this.props.onTableChange) {
-      this.props.onTableChange(e.target.value, row, col);
+      this.props.onTableChange(e.target.value, row, col,this.props.id);
     }
   };
   render() {

@@ -1,33 +1,13 @@
 import React from 'react';
 import * as d3 from 'd3';
-import * as d3Tip from 'd3-tip';
 
-class SimpleLineChart extends React.Component {
+class PrefChart extends React.Component {
   componentDidMount() {
     // const containerWidth = this.chartRef.parentElement.offsetWidth;
     const containerWidth = this.props.width;
     const margin = { top: 50, right: 20, bottom: 130, left: 50 };
     const width = containerWidth - margin.left - margin.right - 300;
     const height = this.props.height - margin.top - margin.bottom;
-
-    let maxValue = 0;
-    let minValue = 1000000;
-
-    this.props.data.forEach((arr) => {
-      const value1 = d3.max(arr.data, (d) => { return parseFloat(d[1]); });
-      const value2 = d3.min(arr.data, (d) => { return parseFloat(d[1]); });
-
-      if (value1 > maxValue) {
-        maxValue = value1;
-      }
-
-      if (value2 < minValue) {
-        minValue = value2;
-      }
-    });
-
-    maxValue += (maxValue - minValue) * 0.2;
-    minValue -= (maxValue - minValue) * 0.2;
 
     const z = d3.scaleOrdinal(d3.schemeCategory10);// 通用线条的颜色
 
@@ -42,7 +22,7 @@ class SimpleLineChart extends React.Component {
       .range([0, width]);
 
     const y = d3.scaleLinear() // 定义y轴
-      .domain([minValue, maxValue])
+      .domain(this.props.yDomain)
       .range([height, 0]);
 
     chart.append('g')
@@ -92,54 +72,11 @@ class SimpleLineChart extends React.Component {
       .attr('class', 'serie');
 
     serie.append('path')
-      .style('stroke', ((d, i) => z(i)))
-      .style('stroke-width', 1)
+      .style('stroke', 'rgba(255,0,0,0.5)')
+      .style('stroke-width', 1.5)
       .attr('fill', 'none')
-      .attr('d', (d => line(d.data)));
+      .attr('d', line);
 
-    const tip = d3Tip() // 设置tip
-      .attr('class', 'd3-tip')
-      .offset([-10, 0])
-      .html((d) => {
-        return `<strong>${d[1]}</strong>`;
-      });
-
-    chart.call(tip);
-
-    serie.selectAll('.circle')
-      .data((d => d.data))
-      .enter().append('g')
-      .append('circle')
-      .attr('fill', '#000')
-      .attr('class', 'linecircle')
-      .attr('cx', line.x())
-      .attr('cy', line.y())
-      .attr('r', 3)
-      .on('mouseover', tip.show)
-      .on('mouseout', tip.hide);
-
-    const markStep = 80;
-
-    const gMark = chart.selectAll('.gMark')
-      .data(this.props.data)
-      .enter()
-      .append('g')
-      .attr('transform', (d, i) => {
-        return `translate(${margin.left + 100 + (i * markStep)},-35)`;
-      });
-
-    gMark.append('rect')
-      .attr('x', 0)
-      .attr('y', 0)
-      .attr('width', 10)
-      .attr('height', 10)
-      .attr('fill', (d, i) => { return z(i); });
-
-    gMark.append('text')
-      .attr('dx', 15)
-      .attr('dy', '.5em')
-      .attr('fill', 'black')
-      .text((d) => { return d.key; });
   }
   render() {
     return (
@@ -149,4 +86,4 @@ class SimpleLineChart extends React.Component {
     );
   }
 }
-export default SimpleLineChart;
+export default PrefChart;

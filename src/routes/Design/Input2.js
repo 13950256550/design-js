@@ -7,38 +7,24 @@ import OneDimensionalDgazdInputPanel from '../../components/Design/Module1D/OneD
 const { TextArea } = Input;
 const { TabPane } = { ...Tabs };
 
+const sessionid = localStorage.getItem('design.client.sessionid');
+
 class DesignInput2 extends React.PureComponent {
   currentSelectedTabIndex = '0'
   componentWillMount() {
     this.props.dispatch({
       type: 'design/fetchData',
-      payload: '1D_IN1',
-    });
-
-    this.props.dispatch({
-      type: 'design/fetchCodeList',
-      payload: '1D',
+      payload: `input_1d_2/${sessionid}`,
     });
 
     this.props.dispatch({
       type: 'design/getFile',
-      payload: '1D/1d_in1',
+      payload: `input_1d_2/${sessionid}`,
     });
   }
 
   callback = (key) => {
     if (key === '0') {
-      /*
-      this.props.dispatch({
-        type: 'design/updateData',
-      });
-      */
-      /*
-      this.props.dispatch({
-        type: 'design/updateFile',
-        payload: this.state.file,
-      });
-      */
       console.log('update data');
     } else if (this.currentSelectedTabIndex === '0') {
       console.log('update file');
@@ -55,12 +41,15 @@ class DesignInput2 extends React.PureComponent {
     */
     this.props.dispatch({
       type: 'design/saveFile',
-      payload: { data: e.target.value },
+      payload: {input_1d_2:{ data: e.target.value }},
     });
   }
 
   render() {
-    const { data } = { ...this.props.file };
+    let { data } = { ...this.props.file.input_1d_2 };
+    if(!data){
+      data = {}
+    }
     return (
       <div>
         <Tabs onChange={this.callback} type="card" size="small">

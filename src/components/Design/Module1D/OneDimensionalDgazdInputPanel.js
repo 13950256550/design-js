@@ -4,15 +4,25 @@ import { Row, Col, Divider } from 'antd';
 
 import CustomInput from '../../../common/core/components/CustomInput';
 import { getCodeList } from '../../../common/core/CodeList';
-import CustomTable from '../../../common/core/components/table/CustomTable';
+import DoubleHeaderTable from '../../../common/core/components/table/DoubleHeaderTable';
 
 const columns = [
-  { key: 1, title: 'A',width:'100' },
-  { key: 2, title: 'B',width:'100' },
-  { key: 3, title: 'C',width:'100' },
-  { key: 4, title: 'D',width:'100' },
-  { key: 5, title: 'E',width:'100' },
-  { key: 6, title: 'F',width:'100' },
+  [
+    { key: 1, title: 'DZR', width: '10%' },
+    { key: 2, title: 'DZS', width: '10%' },
+    { key: 3, title: 'DXR', width: '10%' },
+    { key: 4, title: 'DXS', width: '10%' },
+    { key: 5, title: 'NZR', width: '10%' },
+    { key: 6, title: 'NZS', width: '10%' },
+  ],
+  [
+    { key: 1, title: '转子叶排尖根轴向长度比', width: '10%' },
+    { key: 2, title: '静子叶排尖根轴向长度比', width: '10%' },
+    { key: 3, title: '转子叶排轴向长度缩放系数', width: '10%' },
+    { key: 4, title: '静子叶排轴向长度缩放系数', width: '10%' },
+    { key: 5, title: '转子叶排内加设的计算站数', width: '10%' },
+    { key: 6, title: '静子叶排内加设的计算站数', width: '10%' },
+  ],
 ];
 
 class OneDimensionalDgazdInputPanel extends React.PureComponent {
@@ -51,21 +61,16 @@ class OneDimensionalDgazdInputPanel extends React.PureComponent {
   }
   render() {
     const rows = [
-      [{ key: '1.IZAP=1  必须计算共同工作点', type: 'typeLabel' }],
-      [{ key: '2.LSR=1  必须计算共同工作线工作点', type: 'typeLabel' }],
-      [{ key: '3.此计算只用前三个计算结果', type: 'typeLabel' }],
-      [{ key: '喘振裕度输入NCU' },{ key: '(=3 输入,≠不输,用程序值)', type: 'typeLabel' }],
-      [{ key: '喘振裕度 SM (NCU=3)', type: 'typeLabel' }],
+      [{ key: 'DZV进口导叶尖根轴向长度比' },{ key: 'DXV轴向长度缩放系数' }],
+      [{ key: 'NZV导叶内加设站数' }],
     ];
     return (
       <div>
-        <Divider orientation='left'>此计算"在设计(检查)+特性后进行",前面输入数据应注意:</Divider>
-        {this.getRows(rows.slice(0, 3))}
+        {this.getRows(rows.slice(0, 2))}
         <Divider />
-        {this.getRows(rows.slice(3, 5))}
-        <CustomTable
+        <DoubleHeaderTable
           columns={columns}
-          dataSource={this.props.module1D['AspectRatioCalculatePanel.grid1']}
+          dataSource={this.props.module1D['OneDimensionalDgazdInputPanel.grid1']}
           onTableChange={this.handleTableChange}
         />
       </div>

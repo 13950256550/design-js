@@ -1,4 +1,4 @@
-import { fetchData, fetchCodeList, updateData, getFile, updateFile, get1dOutput, calculate } from '../services/design';
+import { fetchData, fetchCodeList, updateData, getFile, updateFile, getAeroData, getFoilData, getPathData, getPrefData,calculate } from '../services/design';
 
 export default {
   namespace: 'design',
@@ -6,8 +6,11 @@ export default {
   state: {
     module1D: {},
     codelists: {},
-    file: '',
-    d1_output: [],
+    file: {},
+    aero: [],
+    foil: [],
+    path: [],
+    pref: {},
     calculate:{},
   },
 
@@ -28,9 +31,9 @@ export default {
       });
     },
 
-    *updateData(_, { call, put, select }) {
+    *updateData({ payload }, { call, put, select }) {
       const data = yield select(state => state.design.module1D);
-      const response = yield call(updateData, data);
+      const response = yield call(updateData, payload, data);
       yield put({
         type: 'saveFile',
         payload: response,
@@ -45,8 +48,9 @@ export default {
       });
     },
 
-    *updateFile({ payload }, { call, put }) {
-      const response = yield call(updateFile, payload);
+    *updateFile({ payload }, { call, put, select }) {
+      const data = yield select(state => state.design.file);
+      const response = yield call(updateFile, payload, data);
       // console.log(response);
       yield put({
         type: 'save1d',
@@ -54,11 +58,39 @@ export default {
       });
     },
 
-    *get1dOutput(_, { call, put }) {
-      const response = yield call(get1dOutput);
+    *getAeroData(_, { call, put }) {
+      const sessionid = localStorage.getItem('design.client.sessionid');
+      const response = yield call(getAeroData,sessionid);
       // console.log(response);
       yield put({
-        type: 'saveD1Output',
+        type: 'saveAero',
+        payload: response,
+      });
+    },
+
+    *getFoilData(_, { call, put }) {
+      const sessionid = localStorage.getItem('design.client.sessionid');
+      const response = yield call(getFoilData,sessionid);
+      yield put({
+        type: 'saveFoil',
+        payload: response,
+      });
+    },
+
+    *getPathData(_, { call, put }) {
+      const sessionid = localStorage.getItem('design.client.sessionid');
+      const response = yield call(getPathData,sessionid);
+      yield put({
+        type: 'savePath',
+        payload: response,
+      });
+    },
+
+    *getPrefData(_, { call, put }) {
+      const sessionid = localStorage.getItem('design.client.sessionid');
+      const response = yield call(getPrefData,sessionid);
+      yield put({
+        type: 'savePref',
         payload: response,
       });
     },
@@ -97,10 +129,31 @@ export default {
       };
     },
 
-    saveD1Output(state, action) {
+    saveAero(state, action) {
       return {
         ...state,
-        d1_output: action.payload,
+        aero: action.payload,
+      };
+    },
+
+    saveFoil(state, action) {
+      return {
+        ...state,
+        foil: action.payload,
+      };
+    },
+
+    savePath(state, action) {
+      return {
+        ...state,
+        path: action.payload,
+      };
+    },
+
+    savePref(state, action) {
+      return {
+        ...state,
+        pref: action.payload,
       };
     },
 

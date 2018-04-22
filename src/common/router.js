@@ -104,8 +104,17 @@ export const getRouterData = app => {
     '/1d_design/calculate': {
       component: dynamicWrapper(app, ['design'], () => import('../routes/Design/Calculate')),
     },
-    '/1d_design/output': {
-      component: dynamicWrapper(app, ['design'], () => import('../routes/Design/Output')),
+    '/1d_design/output/aero': {
+      component: dynamicWrapper(app, ['design'], () => import('../routes/Design/AeroOutput')),
+    },
+    '/1d_design/output/foil': {
+      component: dynamicWrapper(app, ['design'], () => import('../routes/Design/FoilOutput')),
+    },
+    '/1d_design/output/path': {
+      component: dynamicWrapper(app, ['design'], () => import('../routes/Design/PathOutput')),
+    },
+    '/1d_design/output/pref': {
+      component: dynamicWrapper(app, ['design'], () => import('../routes/Design/PrefOutput')),
     },
     // '/user/:id': {
     //   component: dynamicWrapper(app, [], () => import('../routes/User/SomeComponent')),
