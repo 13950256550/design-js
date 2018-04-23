@@ -9,7 +9,7 @@ class CustomTable extends React.PureComponent {
     const trs = columns.map((data,i) => <th key={i} width={data.width}>{data.title}</th>);
     let rowh;
     if (this.props.rowHeader) {
-      rowh = (<th />);
+      rowh = (<th width="8%" />);
     }
     return (
       <tr>

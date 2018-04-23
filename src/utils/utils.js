@@ -159,3 +159,37 @@ const reg = /(((^https?:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-
 export function isUrl(path) {
   return reg.test(path);
 }
+
+export function getColumns(count){
+  const columns = [];
+  let width = '12%'
+  if(count<8){
+    width = '13%'
+  }else if(count>9){
+    width = '8%'
+  }
+  for(let i=0;i<count;i+=1){
+    const column = {};
+    column.key = i+1;
+    column.title = `${i+1}`;
+    column.width = width
+    columns.push(column)
+  }
+  return columns;
+}
+
+export function getMatrix(row,col,value,src){
+  const matrix = [];
+  for(let i=0;i<row;i+=1){
+    const rowData = []
+    for(let j=0;j<col;j+=1){
+      if(src.length>i && src[0].length>j){
+        rowData.push(src[i][j])
+      }else{
+        rowData.push(value)
+      }
+    }
+    matrix.push(rowData)
+  }
+  return matrix;
+}

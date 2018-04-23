@@ -19,6 +19,11 @@ class DesignFoilOutput extends React.PureComponent {
       data = [];
     }
 
+    let istage = 8;
+    if(data && data[0]){
+      istage = data[0].data.length+1
+    }
+
     return (
       <div>
         <Tabs onChange={this.callback} type="card" size="small">
@@ -26,7 +31,7 @@ class DesignFoilOutput extends React.PureComponent {
             <SimpleLineChart
               yTitle="最大相对厚度CMAX"
               xTitle="级数"
-              xDomain={[0, 8]}
+              xDomain={[0, istage]}
               // yDomain={[20, 200]}
               width={1000}
               height={500}
@@ -37,7 +42,7 @@ class DesignFoilOutput extends React.PureComponent {
             <SimpleLineChart
               yTitle="叶片角"
               xTitle="级数"
-              xDomain={[0, 8]}
+              xDomain={[0, istage]}
               // yDomain={[20, 200]}
               width={1000}
               height={500}
@@ -48,7 +53,7 @@ class DesignFoilOutput extends React.PureComponent {
             <SimpleLineChart
               yTitle="功角"
               xTitle="级数"
-              xDomain={[0, 8]}
+              xDomain={[0, istage]}
               // yDomain={[20, 200]}
               width={1000}
               height={500}
@@ -59,7 +64,7 @@ class DesignFoilOutput extends React.PureComponent {
             <SimpleLineChart
               yTitle="落后角"
               xTitle="级数"
-              xDomain={[0, 8]}
+              xDomain={[0, istage]}
               // yDomain={[20, 200]}
               width={1000}
               height={500}
@@ -70,7 +75,7 @@ class DesignFoilOutput extends React.PureComponent {
             <SimpleLineChart
               yTitle="展弦比稠度"
               xTitle="级数"
-              xDomain={[0, 8]}
+              xDomain={[0, istage]}
               // yDomain={[20, 200]}
               width={1000}
               height={500}
@@ -81,7 +86,7 @@ class DesignFoilOutput extends React.PureComponent {
             <SimpleLineChart
               yTitle="弯角CAMBER"
               xTitle="级数"
-              xDomain={[0, 8]}
+              xDomain={[0, istage]}
               // yDomain={[20, 200]}
               width={1000}
               height={500}
@@ -92,7 +97,7 @@ class DesignFoilOutput extends React.PureComponent {
             <SimpleLineChart
               yTitle="弦长BB"
               xTitle="级数"
-              xDomain={[0, 8]}
+              xDomain={[0, istage]}
               // yDomain={[20, 200]}
               width={1000}
               height={500}
@@ -103,7 +108,7 @@ class DesignFoilOutput extends React.PureComponent {
             <SimpleLineChart
               yTitle="槽道面积裕度"
               xTitle="级数"
-              xDomain={[0, 8]}
+              xDomain={[0, istage]}
               // yDomain={[20, 200]}
               width={1000}
               height={500}
@@ -114,7 +119,7 @@ class DesignFoilOutput extends React.PureComponent {
             <SimpleLineChart
               yTitle="叶片数"
               xTitle="级数"
-              xDomain={[0, 8]}
+              xDomain={[0, istage]}
               // yDomain={[20, 200]}
               width={1000}
               height={500}

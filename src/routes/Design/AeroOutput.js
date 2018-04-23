@@ -19,6 +19,10 @@ class DesignAeroOutput extends React.PureComponent {
       data = [];
     }
 
+    let istage = 8;
+    if(data && data[0]){
+      istage = data[0].data.length+1
+    }
     return (
       <div>
         <Tabs onChange={this.callback} type="card" size="small">
@@ -26,7 +30,7 @@ class DesignAeroOutput extends React.PureComponent {
             <SimpleLineChart
               yTitle="速度m/s"
               xTitle="级数"
-              xDomain={[0, 8]}
+              xDomain={[0, istage]}
               // yDomain={[20, 200]}
               width={1000}
               height={500}
@@ -37,7 +41,7 @@ class DesignAeroOutput extends React.PureComponent {
             <SimpleLineChart
               yTitle="气流角"
               xTitle="级数"
-              xDomain={[0, 8]}
+              xDomain={[0, istage]}
             // yDomain={[20, 200]}
               width={1000}
               height={500}
@@ -48,7 +52,7 @@ class DesignAeroOutput extends React.PureComponent {
             <SimpleLineChart
               yTitle="气动参数"
               xTitle="级数"
-              xDomain={[0, 8]}
+              xDomain={[0, istage]}
             // yDomain={[20, 200]}
               width={1000}
               height={500}
@@ -59,7 +63,7 @@ class DesignAeroOutput extends React.PureComponent {
             <SimpleLineChart
               yTitle="压比"
               xTitle="级数"
-              xDomain={[0, 8]}
+              xDomain={[0, istage]}
               // yDomain={[20, 200]}
               width={1000}
               height={500}
@@ -70,7 +74,7 @@ class DesignAeroOutput extends React.PureComponent {
             <SimpleLineChart
               yTitle="绝热效率"
               xTitle="级数"
-              xDomain={[0, 8]}
+              xDomain={[0, istage]}
               // yDomain={[20, 200]}
               width={1000}
               height={500}
@@ -81,7 +85,7 @@ class DesignAeroOutput extends React.PureComponent {
             <SimpleLineChart
               yTitle="扩散因子"
               xTitle="级数"
-              xDomain={[0, 8]}
+              xDomain={[0, istage]}
               // yDomain={[20, 200]}
               width={1000}
               height={500}

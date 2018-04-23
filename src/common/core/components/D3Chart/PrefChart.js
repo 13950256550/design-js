@@ -17,12 +17,54 @@ class PrefChart extends React.Component {
       .append('g')
       .attr('transform', `translate(${margin.left},${margin.top})`);
 
+    let xMaxValue = 0;
+    let xMinValue = 1000000;
+    let yMaxValue = 0;
+    let yMinValue = 1000000;
+
+    if(this.props.data){
+      this.props.data.forEach((arr) => {
+        const xValue1 = d3.max(arr, (d) => { return parseFloat(d[0]); });
+        const xValue2 = d3.min(arr, (d) => { return parseFloat(d[0]); });
+
+        if (xValue1 > xMaxValue) {
+          xMaxValue = xValue1;
+        }
+
+        if (xValue2 < xMinValue) {
+          xMinValue = xValue2;
+        }
+
+        const yValue1 = d3.max(arr, (d) => { return parseFloat(d[1]); });
+        const yValue2 = d3.min(arr, (d) => { return parseFloat(d[1]); });
+
+        if (yValue1 > yMaxValue) {
+          yMaxValue = yValue1;
+        }
+
+        if (yValue2 < yMinValue) {
+          yMinValue = yValue2;
+        }
+      });
+    }else{
+      xMaxValue = 10;
+      xMinValue = 0;
+      yMaxValue = 10;
+      yMinValue = 0;
+    }
+
+    xMaxValue += (xMaxValue - xMinValue) * 0.1;
+    xMinValue -= (xMaxValue - xMinValue) * 0.1;
+
+    yMaxValue += (yMaxValue - yMinValue) * 0.1;
+    yMinValue -= (yMaxValue - yMinValue) * 0.1;
+
     const x = d3.scaleLinear() // 定义x轴
-      .domain(this.props.xDomain)
+      .domain([xMinValue,xMaxValue])
       .range([0, width]);
 
     const y = d3.scaleLinear() // 定义y轴
-      .domain(this.props.yDomain)
+      .domain([yMinValue,yMaxValue])
       .range([height, 0]);
 
     chart.append('g')

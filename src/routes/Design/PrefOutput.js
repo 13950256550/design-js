@@ -27,8 +27,8 @@ class DesignPrefOutput extends React.PureComponent {
             <PrefChart
               yTitle=""
               xTitle=""
-              xDomain={[8, 28]}
-              yDomain={[0.6, 0.9]}
+              // xDomain={[8, 28]}
+              // yDomain={[0.6, 0.9]}
               width={1000}
               height={500}
               data={data1}
@@ -38,8 +38,8 @@ class DesignPrefOutput extends React.PureComponent {
             <PrefChart
               yTitle=""
               xTitle=""
-              xDomain={[8, 32]}
-              yDomain={[0, 12]}
+              // xDomain={[8, 32]}
+              // yDomain={[0, 12]}
               width={1000}
               height={500}
               data={data2}
@@ -49,8 +49,8 @@ class DesignPrefOutput extends React.PureComponent {
             <PrefChart
               yTitle=""
               xTitle=""
-              xDomain={[0.6, 0.9]}
-              yDomain={[0, 12]}
+              // xDomain={[0.6, 0.9]}
+              // yDomain={[0, 12]}
               width={1000}
               height={500}
               data={data3}

@@ -5,6 +5,7 @@ import { Row, Col, Divider, Carousel } from 'antd';
 import CustomInput from '../../../common/core/components/CustomInput';
 import CustomTable from '../../../common/core/components/table/CustomTable';
 import { getCodeList } from '../../../common/core/CodeList';
+import { getColumns, getMatrix } from '../../../utils/utils';
 
 const columns = [
   [
@@ -110,8 +111,17 @@ class DesignProblemPanel extends React.PureComponent {
     }
 
     if(key==='ISTAGE级数'){
+      module1D.DesignProblemDRT1Grid=getMatrix(1,data.value,'0',this.props.module1D.DesignProblemDRT1Grid)
+      module1D.DesignProblemDRM1Grid=getMatrix(1,data.value,'0',this.props.module1D.DesignProblemDRM1Grid)
+      module1D.DesignProblemDRH1Grid=getMatrix(1,data.value,'0',this.props.module1D.DesignProblemDRH1Grid)
+
+      module1D['CheckQuestion2Panel.grid1']=getMatrix(Number(data.value),8,'0',this.props.module1D['CheckQuestion2Panel.grid1'])
+      module1D['CheckQuestion3Panel.grid1']=getMatrix(Number(data.value)+1,8,'0',this.props.module1D['CheckQuestion3Panel.grid1'])
+
+      module1D['FeaturesCalculate2Panel.grid1']=getMatrix(Number(data.value),6,'0',this.props.module1D['FeaturesCalculate2Panel.grid1'])
+      module1D['FeaturesCalculate3Panel.grid1']=getMatrix(Number(data.value),4,'0',this.props.module1D['FeaturesCalculate3Panel.grid1'])
     }
-    console.log('000000000000000',this.props.module1D)
+
     this.props.dispatch({
       type: 'design/save1d',
       payload: module1D,
@@ -150,6 +160,9 @@ class DesignProblemPanel extends React.PureComponent {
       [{ key: 'DENB叶片' }, { key: 'DRES转子根许用应力' }],
     ];
 
+    const column = getColumns(this.props.module1D['ISTAGE级数'].value);
+    // const matrix = getMatrix(1,8,'0',this.props.module1D.DesignProblemDRT1Grid)
+    // console.log(this.props.module1D.DesignProblemDRT1Grid,matrix)
     return (
       <div>
         {this.getRows(rows.slice(0, 4))}
@@ -169,7 +182,7 @@ class DesignProblemPanel extends React.PureComponent {
             {this.getComponent({ key: 'DCTK压气机出口外径',type:'short' },0)}
             <CustomTable
               id='DesignProblemDRT1Grid'
-              columns={columns[1]}
+              columns={column}
               dataSource={this.props.module1D.DesignProblemDRT1Grid}
               onTableChange={this.handleTableChange}
               rowHeader={['DRT1']}
@@ -179,7 +192,7 @@ class DesignProblemPanel extends React.PureComponent {
             {this.getComponent({ key: 'DCMK压气机出口平均直径',type:'short' },0)}
             <CustomTable
               id='DesignProblemDRM1Grid'
-              columns={columns[1]}
+              columns={column}
               dataSource={this.props.module1D.DesignProblemDRM1Grid}
               onTableChange={this.handleTableChange}
               rowHeader={['DRM1']}
@@ -189,7 +202,7 @@ class DesignProblemPanel extends React.PureComponent {
             {this.getComponent({ key: 'DCHK压气机出口内径',type:'short' },0)}
             <CustomTable
               id='DesignProblemDRH1Grid'
-              columns={columns[1]}
+              columns={column}
               dataSource={this.props.module1D.DesignProblemDRH1Grid}
               onTableChange={this.handleTableChange}
               rowHeader={['DRH1']}

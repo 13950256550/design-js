@@ -5,6 +5,7 @@ import { Row, Col, Divider } from 'antd';
 import CustomInput from '../../../common/core/components/CustomInput';
 import CustomTable from '../../../common/core/components/table/CustomTable';
 import { getCodeList } from '../../../common/core/CodeList';
+import {getColumns, getMatrix} from "../../../utils/utils";
 
 const columns1 = [
   { key: 1, title: 'A', dataIndex: 'A', width: '10%' },
@@ -66,6 +67,24 @@ class FeaturesCalculate1Panel extends React.PureComponent {
     return list.map(((data,i) => this.getRow(data,i)));
   }
 
+  handleChange = (key, data) => {
+    const module1D = {};
+    module1D[key] = data;
+
+    if(key==='等转速条线数N'){
+      module1D['FeaturesCalculate1Panel.grid1']=getMatrix(2,data.value,'0',this.props.module1D['FeaturesCalculate1Panel.grid1'])
+    }
+
+    if(key==='共同工作线给定LSR'){
+      module1D['FeaturesCalculate1Panel.grid2']=getMatrix(2,data.value,'0',this.props.module1D['FeaturesCalculate1Panel.grid2'])
+    }
+
+    this.props.dispatch({
+      type: 'design/save1d',
+      payload: module1D,
+    });
+  }
+
   render() {
     const rows = [
       [{ key: '等转速条线数N' }, { key: '气体常数R' }, { key: '绝热指数K' }],
@@ -85,13 +104,13 @@ class FeaturesCalculate1Panel extends React.PureComponent {
       [{ key: 'DENR转件' }, { key: 'DENS静件' }],
       [{ key: 'DENB叶片' }, { key: 'DRES转子根许用应力' }],
     ];
-
+    const column = getColumns(this.props.module1D['等转速条线数N'].value);
     return (
       <div>
         {this.getRows(rows.slice(0, 3))}
         <Divider orientation="left">NR QL</Divider>
         <CustomTable
-          columns={columns1}
+          columns={column}
           dataSource={this.props.module1D['FeaturesCalculate1Panel.grid1']}
           onTableChange={this.handleTableChange}
           rowHeader={rowHeader}

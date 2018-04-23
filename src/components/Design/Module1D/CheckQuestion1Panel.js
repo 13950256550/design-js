@@ -4,6 +4,7 @@ import { Row, Col } from 'antd';
 
 import CustomInput from '../../../common/core/components/CustomInput';
 import { getCodeList } from '../../../common/core/CodeList';
+import {getMatrix} from "../../../utils/utils";
 
 class CheckQuestion1Panel extends React.PureComponent {
   getComponent = (params,i) => {
@@ -43,6 +44,28 @@ class CheckQuestion1Panel extends React.PureComponent {
   handleTableChange = (value, row, col) => {
     console.log(value, row, col);
   };
+
+  handleChange = (key, data) => {
+    const module1D = {};
+    module1D[key] = data;
+
+    if(key==='ISTAGE级数'){
+      module1D.DesignProblemDRT1Grid=getMatrix(1,data.value,'0',this.props.module1D.DesignProblemDRT1Grid)
+      module1D.DesignProblemDRM1Grid=getMatrix(1,data.value,'0',this.props.module1D.DesignProblemDRM1Grid)
+      module1D.DesignProblemDRH1Grid=getMatrix(1,data.value,'0',this.props.module1D.DesignProblemDRH1Grid)
+
+      module1D['CheckQuestion2Panel.grid1']=getMatrix(Number(data.value),8,'0',this.props.module1D['CheckQuestion2Panel.grid1'])
+      module1D['CheckQuestion3Panel.grid1']=getMatrix(Number(data.value)+1,8,'0',this.props.module1D['CheckQuestion3Panel.grid1'])
+
+      module1D['FeaturesCalculate2Panel.grid1']=getMatrix(Number(data.value),6,'0',this.props.module1D['FeaturesCalculate2Panel.grid1'])
+      module1D['FeaturesCalculate3Panel.grid1']=getMatrix(Number(data.value),4,'0',this.props.module1D['FeaturesCalculate3Panel.grid1'])
+    }
+
+    this.props.dispatch({
+      type: 'design/save1d',
+      payload: module1D,
+    });
+  }
 
   render() {
     const rows = [
