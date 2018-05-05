@@ -163,5 +163,13 @@ export default {
         calculate: { ...action.payload },
       };
     },
+
+    clearCalculate(state) {
+      return {
+        ...state,
+        calculate: { data:'' },
+      };
+    },
   },
+
 };

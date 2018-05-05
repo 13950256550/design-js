@@ -1,5 +1,4 @@
 import React from 'react';
-import { connect } from 'dva';
 import { Input, Select } from 'antd';
 import styles from './CustomInput.less';
 import { getSelectOptions } from '../CodeList';
@@ -97,6 +96,19 @@ class CustomInput extends React.PureComponent {
             </div>
           );
           break;
+        case 'longLabel2':
+          if (codelist && codelist.length > 0) {
+            input = this.getSelectComponent(codelist, data.value, 1, data.disabled);
+          } else {
+            input = this.getInputComponent(data.value, 1, data.disabled);
+          }
+          Component = (
+            <div className={styles.customdiv_21}>
+              <span className={styles.customspan_22}>{data.label}</span>
+              {input}
+            </div>
+          );
+          break;
         default:
       }
     } else if (data) {
@@ -144,4 +156,4 @@ class CustomInput extends React.PureComponent {
   }
 }
 
-export default connect()(CustomInput);
+export default CustomInput;

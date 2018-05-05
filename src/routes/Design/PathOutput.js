@@ -11,23 +11,24 @@ class DesignPathOutput extends React.PureComponent {
   }
 
   render() {
-    let { data } = { ...this.props };
-    if (!data) {
-      data = [];
+    const { data } = { ...this.props };
+    if (!data || data.length===0) {
+      return (<div />)
+    }else{
+      return (
+        <div>
+          <PathChart
+            yTitle=""
+            xTitle=""
+            xDomain={[-0.01, 0.455]}
+            yDomain={[0.1, 0.35]}
+            width={1000}
+            height={500}
+            data={data}
+          />
+        </div>
+      );
     }
-    return (
-      <div>
-        <PathChart
-          yTitle=""
-          xTitle=""
-          xDomain={[-0.01, 0.455]}
-          yDomain={[0.1, 0.35]}
-          width={1000}
-          height={500}
-          data={data}
-        />
-      </div>
-    );
   }
 }
 

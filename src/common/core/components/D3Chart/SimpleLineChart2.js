@@ -1,124 +1,154 @@
 import React from 'react';
 import * as d3 from 'd3';
 
-const data = [
-  { time: '00:00', pm25: 75 },
-  { time: '01:00', pm25: 66 },
-  { time: '02:00', pm25: 43 },
-  { time: '03:00', pm25: 32 },
-  { time: '04:00', pm25: 20 },
-  { time: '05:00', pm25: 18 },
-  { time: '06:00', pm25: 16 },
-  { time: '07:00', pm25: 33 },
-  { time: '08:00', pm25: 53 },
-  { time: '09:00', pm25: 66 },
-  { time: '10:00', pm25: 55 },
-  { time: '11:00', pm25: 67 },
-  { time: '12:00', pm25: 99 },
-  { time: '13:00', pm25: 138 },
-  { time: '14:00', pm25: 110 },
-  { time: '15:00', pm25: 99 },
-  { time: '16:00', pm25: 119 },
-  { time: '17:00', pm25: 125 },
-  { time: '18:00', pm25: 173 },
-  { time: '19:00', pm25: 168 },
-  { time: '20:00', pm25: 162 },
-  { time: '21:00', pm25: 143 },
-  { time: '22:00', pm25: 132 },
-  { time: '23:00', pm25: 87 },
-];
+class SimpleLineChart extends React.Component {
+  componentDidMount(){
+    this.draw();
+  }
 
-class SimpleLineChart2 extends React.Component {
-  componentDidMount() {
-    const containerWidth = this.chartRef.parentElement.offsetWidth;
-    const margin = { top: 30, right: 20, bottom: 30, left: 50 };
-    const width = containerWidth - margin.left - margin.right;
-    const height = 500 - margin.top - margin.bottom;
-    const timeParse = d3.timeParse('%H:%M');
+  draw = () => {
+    // const containerWidth = this.chartRef.parentElement.offsetWidth;
+    const containerWidth = this.props.width;
+    const margin = { top: 50, right: 20, bottom: 60, left: 80 };
+    const width = containerWidth - margin.left - margin.right - 300;
+    const height = this.props.height - margin.top - margin.bottom;
 
-    const key = Object.keys(data[0])[1];
-    const serieArr = data.map((d) => {
-      return {
-        key,
-        time: timeParse(d.time),
-        value: d[key],
-      };
-    });
+    let xMaxValue = -1000000;
+    let xMinValue = 1000000;
+    let yMaxValue = -1000000;
+    let yMinValue = 1000000;
 
-    const maxValue = d3.max(serieArr, (d) => { return d.value; });
-    const stepValue = 25; // 用于生成背景柱
+    if(this.props.data){
+      this.props.data.forEach((arr) => {
+        const xValue1 = d3.max(arr, (d) => { return Number(d[1]); });
+        const xValue2 = d3.min(arr, (d) => { return Number(d[1]); });
 
-    const x = d3.scaleTime() // 定义x轴
-      .domain([serieArr[0].time, serieArr[data.length - 1].time])
-      .range([0, width]);
+        if (xValue1 > xMaxValue) {
+          xMaxValue = xValue1;
+        }
 
-    const y = d3.scaleLinear() // 定义y轴
-      .domain([0, maxValue])
-      .range([height, 0]);
+        if (xValue2 < xMinValue) {
+          xMinValue = xValue2;
+        }
 
-    const line = d3.line()
-      .curve(d3.curveMonotoneX)
-      .x((d) => { return x(d.time); })
-      .y((d) => { return y(d.value); });
+        const yValue1 = d3.max(arr, (d) => { return Number(d[0]); });
+        const yValue2 = d3.min(arr, (d) => { return Number(d[0]); });
+
+        if (yValue1 > yMaxValue) {
+          yMaxValue = yValue1;
+        }
+
+        if (yValue2 < yMinValue) {
+          yMinValue = yValue2;
+        }
+      });
+    }else{
+      xMaxValue = 10;
+      xMinValue = 0;
+      yMaxValue = 10;
+      yMinValue = 0;
+    }
+
+    xMaxValue += (xMaxValue - xMinValue) * 0.1;
+    xMinValue -= (xMaxValue - xMinValue) * 0.1;
+
+    yMaxValue += (yMaxValue - yMinValue) * 0.1;
+    yMinValue -= (yMaxValue - yMinValue) * 0.1;
+
+    const z = d3.scaleOrdinal(d3.schemeCategory10);// 通用线条的颜色
 
     const chart = d3.select(this.chartRef)
       .attr('width', width + margin.left + margin.right)
-      .attr('height', height + margin.top + margin.bottom + 40)
+      .attr('height', height + margin.top + margin.bottom)
       .append('g')
       .attr('transform', `translate(${margin.left},${margin.top})`);
 
-    chart.selectAll('.serie')
-      .data([serieArr])
-      .enter().append('g')
-      .attr('class', 'serie')
-      .append('path')
-      .style('stroke', '#000')
-      .style('stroke-width', 1)
-      .attr('fill', 'none')
-      .attr('d', line);
+    let x;
+    if(this.props.xDomain){
+      x = d3.scaleLinear() // 定义x轴
+        .domain(this.props.xDomain)
+        .range([0, width]);
+    }else{
+      x = d3.scaleLinear() // 定义x轴
+        .domain([xMinValue,xMaxValue])
+        .range([0, width]);
+    }
 
+    let y
+    if(this.props.yDomain){
+      y = d3.scaleLinear() // 定义y轴
+        .domain(this.props.yDomain)
+        .range([height, 0]);
+    }else{
+      y = d3.scaleLinear() // 定义y轴
+        .domain([yMinValue,yMaxValue])
+        .range([height, 0]);
+    }
 
-    chart.append('g')// 设置y轴
+    chart.append('g')
       .attr('class', 'axis axis--y')
-      .call(d3.axisLeft(y).tickValues(d3.range(0, maxValue, stepValue)))
+      .call(d3.axisLeft(y))
       .append('text')
-      // .attr('transform', 'rotate(-90)')
-      // .attr('y', 0 - margin.left)
-      // .attr('x', 0 - (height / 2))
-      .attr('y', -16)
+      .style('font-size', '18px')
+      .attr('y', -35)
       .attr('dy', '.71em')
       .style('text-anchor', 'middle')
       .style('fill', '#000')
-      .text('AQI 值');
+      .text(this.props.yTitle);
 
     chart.append('g')
       .attr('class', 'axis axis--x')
       .attr('transform', `translate(0,${height})`)
-      .call(d3.axisBottom(x).ticks(24).tickFormat(d3.timeFormat('%H:%M')))
-      .append('text')// 生成x轴
-      .attr('transform', 'translate(500, 40)')
+      .call(d3.axisBottom(x))
+      .append('text')
+      .style('font-size', '18px')
+      .attr('transform', `translate(${width / 2}, 40)`)
       .style('text-anchor', 'middle')
       .style('fill', '#000')
-      .text('日期');
+      .text(this.props.xTitle);
 
     chart.selectAll('.axis--x .tick')// xx轴背景线
       .append('line')
-      .attr('class', 'bg-line')
       .attr('stroke', 'rgba(0,0,0,0.5)')
       .attr('stroke-dasharray', '2,2')
-      .attr('shape-rendering', 'crispEdges')
       .attr('transform', `translate(${0},${(-1) * height})`)
       .attr('y2', height);
 
     chart.selectAll('.axis--y .tick')// xx轴背景线
       .append('line')
-      .attr('class', 'bg-line')
       .attr('stroke', 'rgba(0,0,0,0.5)')
       .attr('stroke-dasharray', '2,2')
-      .attr('shape-rendering', 'crispEdges')
       // .attr('transform', `translate(${0},${(-1) * height})`)
       .attr('x2', width);
+
+    const line = d3.line()
+      .curve(d3.curveMonotoneX)
+      .x((d) => { return x(d[1]); })
+      .y((d) => { return y(d[0]); });
+
+    const serie = chart.selectAll('.serie')
+      .data(this.props.data)
+      .enter().append('g')
+      .attr('class', 'serie');
+
+    serie.append('path')
+      .style('stroke', ((d, i) => z(i)))
+      .style('stroke-width', 1)
+      .attr('fill', 'none')
+      .attr('d', line);
+
+    serie.selectAll('.circle')
+      .data((d => d))
+      .enter().append('g')
+      .append('circle')
+      .attr('fill', '#000')
+      .attr('class', 'linecircle')
+      .attr('cx', line.x())
+      .attr('cy', line.y())
+      .attr('r', 3);
+
   }
+
   render() {
     return (
       <div className="line-chart--simple">
@@ -127,5 +157,4 @@ class SimpleLineChart2 extends React.Component {
     );
   }
 }
-
-export default SimpleLineChart2;
+export default SimpleLineChart;

@@ -116,6 +116,15 @@ export const getRouterData = app => {
     '/1d_design/output/pref': {
       component: dynamicWrapper(app, ['design'], () => import('../routes/Design/PrefOutput')),
     },
+    '/s2_design/input': {
+      component: dynamicWrapper(app, ['designS2'], () => import('../routes/Design/s2/Input')),
+    },
+    '/s2_design/calculate': {
+      component: dynamicWrapper(app, ['designS2'], () => import('../routes/Design/s2/Calculate')),
+    },
+    '/s2_design/output': {
+      component: dynamicWrapper(app, ['designS2'], () => import('../routes/Design/s2/Output')),
+    },
     // '/user/:id': {
     //   component: dynamicWrapper(app, [], () => import('../routes/User/SomeComponent')),
     // },

@@ -18,7 +18,7 @@ const { TabPane } = { ...Tabs };
 const sessionid = localStorage.getItem('design.client.sessionid');
 
 class Design extends React.PureComponent {
-  currentSelectedTabIndex = '0'
+
   componentWillMount() {
     this.props.dispatch({
       type: 'design/fetchData',
@@ -50,7 +50,7 @@ class Design extends React.PureComponent {
     }
     this.currentSelectedTabIndex = key;
   }
-
+  currentSelectedTabIndex = '0'
   handleTextareaChange = (e) => {
     e.preventDefault();
     /*

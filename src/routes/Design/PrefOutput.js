@@ -14,51 +14,50 @@ class DesignPrefOutput extends React.PureComponent {
   }
 
   render() {
-    let { data1, data2, data3 } = { ...this.props };
-    if(!data1){
-      data1=[];
-      data2=[];
-      data3=[];
+    const { data1, data2, data3 } = { ...this.props };
+    if(!data1 || data1.length===0){
+      return (<div />)
+    }else{
+      return (
+        <div>
+          <Tabs onChange={this.callback} type="card" size="small">
+            <TabPane tab="EFF-G" key="0">
+              <PrefChart
+                yTitle=""
+                xTitle=""
+                // xDomain={[8, 28]}
+                // yDomain={[0.6, 0.9]}
+                width={1000}
+                height={500}
+                data={data1}
+              />
+            </TabPane>
+            <TabPane tab="PR-G" key="1">
+              <PrefChart
+                yTitle=""
+                xTitle=""
+                // xDomain={[8, 32]}
+                // yDomain={[0, 12]}
+                width={1000}
+                height={500}
+                data={data2}
+              />
+            </TabPane>
+            <TabPane tab="PR-EFF" key="2">
+              <PrefChart
+                yTitle=""
+                xTitle=""
+                // xDomain={[0.6, 0.9]}
+                // yDomain={[0, 12]}
+                width={1000}
+                height={500}
+                data={data3}
+              />
+            </TabPane>
+          </Tabs>
+        </div>
+      );
     }
-    return (
-      <div>
-        <Tabs onChange={this.callback} type="card" size="small">
-          <TabPane tab="EFF-G" key="0">
-            <PrefChart
-              yTitle=""
-              xTitle=""
-              // xDomain={[8, 28]}
-              // yDomain={[0.6, 0.9]}
-              width={1000}
-              height={500}
-              data={data1}
-            />
-          </TabPane>
-          <TabPane tab="PR-G" key="1">
-            <PrefChart
-              yTitle=""
-              xTitle=""
-              // xDomain={[8, 32]}
-              // yDomain={[0, 12]}
-              width={1000}
-              height={500}
-              data={data2}
-            />
-          </TabPane>
-          <TabPane tab="PR-EFF" key="2">
-            <PrefChart
-              yTitle=""
-              xTitle=""
-              // xDomain={[0.6, 0.9]}
-              // yDomain={[0, 12]}
-              width={1000}
-              height={500}
-              data={data3}
-            />
-          </TabPane>
-        </Tabs>
-      </div>
-    );
   }
 }
 

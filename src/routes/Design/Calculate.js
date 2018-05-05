@@ -15,11 +15,19 @@ class DesignCalculate extends React.PureComponent {
     });
   }
 
+  handleClear = (e) => {
+    e.preventDefault();
+    this.props.dispatch({
+      type: 'design/clearCalculate',
+    });
+  }
+
   render() {
-    const { data } = { ...this.props.calculate };
+    const { data } = this.props.calculate;
     return (
       <div>
         <Button type="primary" onClick={this.handleClick}>计算</Button>
+        <Button type="primary" onClick={this.handleClear}>清空</Button>
         <Divider orientation='left'>计算结果</Divider>
         <TextArea
           rows={20}
