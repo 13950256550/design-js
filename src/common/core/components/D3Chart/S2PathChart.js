@@ -1,7 +1,12 @@
 import React from 'react';
 import * as d3 from 'd3';
 
+import { copyGrid } from '../../utils';
+
 class S2PathChart extends React.Component {
+  state = {
+    data: this.props.data,
+  }
   getX = () =>{
     return d3.scaleLinear() // 定义x轴
       .domain(this.props.xDomain)
@@ -22,8 +27,8 @@ class S2PathChart extends React.Component {
   }
 
   redraw = (data) => {
-    const serie = this.myChart.selectAll('.serie')
-      .data(data)
+    // const serie = this.myChart.selectAll('.serie')
+      // .data(data)
     /*
     const enter = serie.enter();
     const exit = serie.exit();
@@ -36,9 +41,11 @@ class S2PathChart extends React.Component {
 
     // enter.append('path').attr("d", (d,i) => {console.log(d,i);return this.getLine()(d)});
 
-    serie.selectAll('path').attr("d",this.getLine());
+    // serie.selectAll('path').attr("d",this.getLine());
 
     // exit.remove();
+    this.setState({ data });
+    this.drawLine();
   }
 
   getPoint = (line,point)=> {
@@ -78,14 +85,14 @@ class S2PathChart extends React.Component {
       .attr("cy", (d) => { return d[1]; });
   }
 
-  drawLine = (data) => {
+  drawLine = () => {
     this.myChart.selectAll('.serie').remove();
     const serie = this.myChart.selectAll('.serie')
-      .data(data)
+      .data(this.state.data)
       .enter().append('g')
       .attr('class', 'serie');
 
-    const propsData = this.props.data
+    const propsData = this.state.data
     serie.append('path')
       .style('stroke', 'rgba(255,0,0,0.5)')
       .style('stroke-width', 1.5)
@@ -127,25 +134,36 @@ class S2PathChart extends React.Component {
       this.myChart.selectAll("circle").remove()
 
       // this.props.onMouseMove(this.select,temp);
-      this.select.data[0] = Number(axisPoint[0]);
-      this.select.data[1] = Number(axisPoint[1]);
+      this.select.data[0] = axisPoint[0];
+      this.select.data[1] = axisPoint[1];
 
-      const line = this.props.data[this.select.pointId]
-      const pointId = (this.select.lineId-this.props.data.length)+2
+      const line = this.state.data[this.select.pointId]
+      const pointId = (this.select.lineId-this.state.data.length)+2
 
       line[pointId][0] = axisPoint[0];
       line[pointId][1] = axisPoint[1];
 
-      this.drawLine(this.props.data)
+      // console.log(line[pointId],this.state.data)
+      // this.setState({data:copy})
+
+      const line2 = this.state.data[this.select.lineId]
+      line2[this.select.pointId][0] = axisPoint[0];
+      line2[this.select.pointId][1] = axisPoint[1];
+
+      //console.log(this.select,this.state.data)
+
+      this.drawLine()
       this.drawCircle([mousePoint])
     }
   }
 
   mouseup =() =>{
     d3.event.preventDefault();
-    this.drag = false;
-    this.myChart.selectAll("circle").remove()
-    this.props.onEditChart(this.props.data)
+    if(this.drag) {
+      this.drag = false;
+      this.myChart.selectAll("circle").remove()
+      this.props.onEditChart(this.state.data)
+    }
   }
 
   componentDidMount() {
@@ -210,7 +228,7 @@ class S2PathChart extends React.Component {
       // .attr('transform', `translate(${0},${(-1) * height})`)
       .attr('x2', width);
 
-    this.drawLine(this.props.data);
+    this.drawLine(this.state.data);
   }
   render() {
     return (

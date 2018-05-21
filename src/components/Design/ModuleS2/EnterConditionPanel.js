@@ -4,6 +4,7 @@ import { Row,Col,Divider,Radio } from 'antd';
 
 import DesignPanel from '../../../common/core/components/design/DesignPanel';
 import DoubleHeaderTable from '../../../common/core/components/table/DoubleHeaderTable';
+import {copyGrid} from "../../../common/core/utils";
 
 const columns = [
   [
@@ -26,7 +27,17 @@ const columns = [
 
 @DesignPanel
 class EnterConditionPanel extends React.PureComponent {
-
+  handleTableChange = (value, row, col,id) =>{
+    console.log(value, row, col,id)
+    const grid = copyGrid(this.props.moduleData[id]);
+    const moduleData = {}
+    grid[row][col] = value;
+    moduleData[id] = grid;
+    this.props.dispatch({
+      type: 'designS2/saveS2',
+      payload: moduleData,
+    });
+  }
   render() {
     const rows = [
       [{ key: '进口段总压恢复沿流向分布幂指数', type: 'typeLabel' }],
@@ -48,6 +59,7 @@ class EnterConditionPanel extends React.PureComponent {
         {this.props.getRows(rows.slice(0, 2))}
         <Divider />
         <DoubleHeaderTable
+          id="ControlVariable.grid1"
           columns={columns}
           dataSource={this.props.moduleData['ControlVariable.grid1']}
           onTableChange={this.handleTableChange}

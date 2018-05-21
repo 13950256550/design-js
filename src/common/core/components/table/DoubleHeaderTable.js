@@ -49,8 +49,8 @@ class DoubleHeaderTable extends React.PureComponent {
         <td key={colIndex}>
           <Input
             className={styles.input}
-            defaultValue={value}
-            onPressEnter={e => this.handleTableChange(e, rowIndex, colIndex)}
+            value={value}
+            onChange={e => this.handleInputChange(e, rowIndex, colIndex)}
             row={rowIndex}
             col={colIndex}
           />
@@ -78,10 +78,10 @@ class DoubleHeaderTable extends React.PureComponent {
     );
   }
 
-  handleTableChange = (e, row, col) => {
+  handleInputChange = (e, row, col) => {
     e.preventDefault();
     if (this.props.onTableChange) {
-      this.props.onTableChange(e.target.value, row, col);
+      this.props.onTableChange(e.target.value, row, col,this.props.id);
     }
   };
   render() {

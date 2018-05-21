@@ -25,9 +25,15 @@ class DesignInput2 extends React.PureComponent {
 
   callback = (key) => {
     if (key === '0') {
-      console.log('update data');
+      this.props.dispatch({
+        type: 'design/updateData',
+        payload: `input_1d_2/${sessionid}`,
+      });
     } else if (this.currentSelectedTabIndex === '0') {
-      console.log('update file');
+      this.props.dispatch({
+        type: 'design/updateFile',
+        payload: `input_1d_2/${sessionid}`,
+      });
     }
     this.currentSelectedTabIndex = key;
   }
@@ -50,6 +56,7 @@ class DesignInput2 extends React.PureComponent {
     if(!data){
       data = {}
     }
+
     return (
       <div>
         <Tabs onChange={this.callback} type="card" size="small">

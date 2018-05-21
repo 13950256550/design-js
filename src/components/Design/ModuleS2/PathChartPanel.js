@@ -35,8 +35,8 @@ const myData3 = [
 
 let count = 0;
 
-var ddd = [[]];
-class DesignS2Input extends React.PureComponent {
+let ddd = [[]];
+class DesignS2Input extends React.Component {
   constructor(props) {
     super()
     this.state = {
@@ -72,11 +72,17 @@ class DesignS2Input extends React.PureComponent {
     ddd = [myData,myData3]
     // this.chart.redraw(ddd);
     const aaa = this.props.data['ControlVariable.grid2']
-    console.log(aaa)
-    aaa[0][0] = `${Number(aaa[0][0])+20}`;
-    aaa[0][1] = `${Number(aaa[0][1])+20}`;
+    //console.log(aaa)
+    //aaa[0][0] = `${Number(aaa[0][0])+20}`;
+    //aaa[0][1] = `${Number(aaa[0][1])+20}`;
     ddd = this.getLineData(aaa);
-    this.chart.draw(ddd)
+    this.chart.redraw(ddd)
+  }
+
+  redrawChart =() =>{
+    const aaa = this.props.data['ControlVariable.grid2']
+    ddd = this.getLineData(aaa);
+    this.chart.redraw(ddd)
   }
 
   getLineData = (data) => {
@@ -84,12 +90,12 @@ class DesignS2Input extends React.PureComponent {
     const line1 = [];
     const line2 = [];
     data.forEach(e =>{
-      line1.push([Number(e[2]),Number(e[1])]);
-      line2.push([Number(e[4]),Number(e[3])]);
+      line1.push([e[2],e[1]]);
+      line2.push([e[4],e[3]]);
 
       const temp = [];
-      temp.push([Number(e[2]),Number(e[1])]);
-      temp.push([Number(e[4]),Number(e[3])]);
+      temp.push([e[2],e[1]]);
+      temp.push([e[4],e[3]]);
       lines.push(temp)
     });
 
@@ -107,11 +113,11 @@ class DesignS2Input extends React.PureComponent {
     line1.forEach((d,i)=>{
       const row = [];
       row.push(aaa[i][0]);
-      row.push(line2[i][1]);
-      row.push(line2[i][0]);
       row.push(line1[i][1]);
       row.push(line1[i][0]);
-      row.push(aaa[i][4]);
+      row.push(line2[i][1]);
+      row.push(line2[i][0]);
+      row.push(aaa[i][5]);
       grid.push(row);
     })
     // console.log('getGridData',grid)
@@ -119,7 +125,16 @@ class DesignS2Input extends React.PureComponent {
   }
   onEditChart =(data) =>{
     // console.log('onEditChart',data)
-    this.getGridData(data)
+    const grid = this.getGridData(data)
+    const obj = {};
+    obj['ControlVariable.grid2'] = grid;
+    // console.log(this.props.data['ControlVariable.grid2'],grid)
+
+    this.props.dispatch({
+      type: 'designS2/saveS2',
+      payload: obj,
+    });
+
   }
   render() {
     // console.log(this.props.data['ControlVariable.grid2'])

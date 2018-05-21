@@ -6,6 +6,7 @@ import {getSelectOptions} from '../../../common/core/CodeList';
 
 import DesignPanel from '../../../common/core/components/design/DesignPanel';
 import DoubleHeaderTable from '../../../common/core/components/table/DoubleHeaderTable';
+import {copyGrid} from "../../../common/core/utils";
 
 const columns = [
   [
@@ -28,16 +29,62 @@ const columns = [
 
 @DesignPanel
 class BladeParmeterPanel extends React.PureComponent {
-  getNRowSelectionComponent = (nrow) =>{
+  constructor(props) {
+    super()
+    this.state = {
+      copyid: 1,
+    };
+  }
+
+  getNRowSelectionComponent = (nrow,vlaue,key) =>{
     const option = [];
     for(let i=1;i<=nrow;i+=1){
       option.push({key:i,value:i})
     }
     return (
-      <Select  style={{ width: 120 }} value={1}>
+      <Select
+        key={key}
+        style={{ width: 120 }}
+        value={vlaue}
+        onChange={e=>this.handleSelectChange(e,key)}
+      >
         {option.map(codeObject => <Select.Option key={codeObject.key}>{`${codeObject.key}`}</Select.Option>)}
       </Select>
     )
+  }
+
+  handleTableChange = (value, row, col,id) =>{
+    // console.log(value, row, col,id)
+    const grid = copyGrid(this.props.moduleData[id]);
+    //const moduleData = {}
+    grid[row][col] = value;
+    // moduleData[id] = grid;
+
+    const moduleData = {...this.props.moduleData}
+    // console.log(moduleData)
+    moduleData[id] = grid
+
+    this.props.dispatch({
+      type: 'designS2/saveS2NrowMap',
+      key:this.props.nrowid,
+      payload: moduleData,
+    });
+
+  }
+
+  handleSelectChange = (value,key) =>{
+    // this.setState({ nrowid:value });
+    if(key==='sel1'){
+      this.props.changeDataSource(value)
+    }else if (key==='sel2'){
+      this.setState({
+        copyid:value,
+      })
+    }
+  }
+
+  handleCopyButtonClick = () =>{
+    this.props.handleCopy(this.props.nrowid,this.state.copyid)
   }
   render() {
     const rows = [
@@ -65,7 +112,10 @@ class BladeParmeterPanel extends React.PureComponent {
 
     if(this.props.moduleData){
       const nrow = Number(this.props.nrow.value)
-      const component = this.getNRowSelectionComponent(nrow);
+      const component1 = this.getNRowSelectionComponent(nrow,this.props.nrowid,'sel1');
+      const component2 = this.getNRowSelectionComponent(nrow,this.state.copyid,'sel2');
+      // const griddata = this.props.moduleData[this.state.nrowid]['ControlVariable.grid3']
+      const griddata = this.props.moduleData['ControlVariable.grid3']
       return (
         <div>
           <Row>
@@ -73,7 +123,7 @@ class BladeParmeterPanel extends React.PureComponent {
               <div>
                 <Row>
                   <Col span={4} offset={2}><Radio>内涵</Radio></Col>
-                  <Col><span>叶排序号</span>{component}</Col>
+                  <Col><span>叶排序号</span>{component1}</Col>
                 </Row>
                 <Divider orientation="left">叶排计算控制参数</Divider>
                 {this.props.getRows(rows.slice(0, 5))}
@@ -82,10 +132,10 @@ class BladeParmeterPanel extends React.PureComponent {
             <Col span={4}>
               <div>
                 <Row>
-                  <Button>拷贝到</Button>
+                  <Button type="primary" onClick={this.handleCopyButtonClick}>拷贝到</Button>
                 </Row>
                 <Row>
-                  {component}
+                  {component2}
                 </Row>
               </div>
             </Col>
@@ -100,8 +150,9 @@ class BladeParmeterPanel extends React.PureComponent {
           </Row>
           <Divider />
           <DoubleHeaderTable
+            id="ControlVariable.grid3"
             columns={columns}
-            dataSource={this.props.moduleData['ControlVariable.grid3']}
+            dataSource={griddata}
             onTableChange={this.handleTableChange}
           />
           <Divider orientation="left">以下参数标识的功能现通常不用</Divider>
@@ -118,7 +169,7 @@ class BladeParmeterPanel extends React.PureComponent {
 function mapStateToProps(state) {
   return {
     codelists: state.designS2.codelists,
-    moduleData: state.designS2.moduleS2['ControlVariable.nrowMap']['1'],
+    // moduleData: state.designS2.moduleS2['ControlVariable.nrowMap'],
     nrow:state.designS2.moduleS2['NROW叶排数'],
   };
 }

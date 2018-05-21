@@ -6,6 +6,18 @@ import CustomInput from '../../components/CustomInput';
 
 
 const DesignPanel = WrappedComponent => class extends React.PureComponent {
+  getComponentValue = (key) =>{
+    let result = this.props.moduleData
+    const arr = key.split('.')
+    arr.forEach((e)=>{
+      result = result[e];
+    })
+    return result
+  }
+  getCodelistKey =(key)=>{
+    const arr = key.split('.')
+    return arr[arr.length-1]
+  }
   getComponent = (params,i) => {
     const { key, callback, span, type } = { ...params };
     let data = this.props.moduleData[key];

@@ -5,6 +5,7 @@ import { Row,Col,Radio } from 'antd';
 import DesignPanel from '../../../common/core/components/design/DesignPanel';
 import CustomTable from '../../../common/core/components/table/CustomTable';
 import SimpleLineChart2 from '../../../common/core/components/D3Chart/SimpleLineChart2';
+import {copyGrid} from "../../../common/core/utils";
 
 const columns = [
   { key: 1, title: 'LINE', width: '1%' },
@@ -13,6 +14,18 @@ const columns = [
 
 @DesignPanel
 class FlowRatioPanel extends React.PureComponent {
+  handleTableChange = (value, row, col,id) =>{
+    const grid = copyGrid(this.props.moduleData[id]);
+    const moduleData = {}
+    grid[row][col] = value;
+    moduleData[id] = grid;
+    this.props.dispatch({
+      type: 'designS2/saveS2',
+      payload: moduleData,
+    });
+
+    this.chart.redraw([grid]);
+  }
   render() {
     return (
       <div>
@@ -22,6 +35,7 @@ class FlowRatioPanel extends React.PureComponent {
         <Row type="flex" align="middle">
           <Col span={4} >
             <CustomTable
+              id="ControlVariable.grid4"
               columns={columns}
               dataSource={this.props.moduleData['ControlVariable.grid4']}
               onTableChange={this.handleTableChange}
@@ -34,6 +48,7 @@ class FlowRatioPanel extends React.PureComponent {
               width={700}
               height={500}
               data={[this.props.moduleData['ControlVariable.grid4']]}
+              ref={(c) => { this.chart = c; }}
             />
           </Col>
         </Row>

@@ -28,7 +28,7 @@ export default {
     },
 
     *updateData({payload}, {call, put, select}) {
-      const data = yield select(state => state.design.module1D);
+      const data = yield select(state => state.designS2.moduleS2);
       const response = yield call(updateData, payload, data);
       yield put({
         type: 'saveFile',
@@ -44,7 +44,7 @@ export default {
     },
 
     *updateFile({payload}, {call, put, select}) {
-      const data = yield select(state => state.design.file);
+      const data = yield select(state => state.designS2.file);
       const response = yield call(updateFile, payload, data);
       // console.log(response);
       yield put({
@@ -60,6 +60,20 @@ export default {
         ...state,
         moduleS2: { ...state.moduleS2, ...action.payload },
       };
+      return result;
+    },
+
+    saveS2NrowMap(state, action){
+      const moduleS2 = {}
+      const moduleS2NrowMap = {...state.moduleS2["ControlVariable.nrowMap"]}
+      moduleS2NrowMap[action.key] = {...action.payload}
+
+      moduleS2["ControlVariable.nrowMap"] = {...moduleS2NrowMap};
+      const result = {
+        ...state,
+        moduleS2: { ...state.moduleS2, ...moduleS2 },
+      };
+      console.log(result,action)
       return result;
     },
 

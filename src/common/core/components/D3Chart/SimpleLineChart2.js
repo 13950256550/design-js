@@ -3,10 +3,10 @@ import * as d3 from 'd3';
 
 class SimpleLineChart extends React.Component {
   componentDidMount(){
-    this.draw();
+    this.draw(this.props.data);
   }
 
-  draw = () => {
+  draw = (data) => {
     // const containerWidth = this.chartRef.parentElement.offsetWidth;
     const containerWidth = this.props.width;
     const margin = { top: 50, right: 20, bottom: 60, left: 80 };
@@ -18,8 +18,8 @@ class SimpleLineChart extends React.Component {
     let yMaxValue = -1000000;
     let yMinValue = 1000000;
 
-    if(this.props.data){
-      this.props.data.forEach((arr) => {
+    if(data){
+      data.forEach((arr) => {
         const xValue1 = d3.max(arr, (d) => { return Number(d[1]); });
         const xValue2 = d3.min(arr, (d) => { return Number(d[1]); });
 
@@ -127,7 +127,7 @@ class SimpleLineChart extends React.Component {
       .y((d) => { return y(d[0]); });
 
     const serie = chart.selectAll('.serie')
-      .data(this.props.data)
+      .data(data)
       .enter().append('g')
       .attr('class', 'serie');
 
@@ -147,6 +147,12 @@ class SimpleLineChart extends React.Component {
       .attr('cy', line.y())
       .attr('r', 3);
 
+  }
+
+  redraw(data){
+    const chart = d3.select(this.chartRef)
+    chart.selectAll('g').remove();
+    this.draw(data)
   }
 
   render() {
